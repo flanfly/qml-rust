@@ -108,6 +108,12 @@ impl Drop for QVariant {
     }
 }
 
+impl Default for QVariant {
+    fn default() -> QVariant {
+        0.into()
+    }
+}
+
 #[doc(hidden)]
 impl From<DosQObject> for QVariant {
     fn from(i: DosQObject) -> Self {

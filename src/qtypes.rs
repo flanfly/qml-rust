@@ -4,6 +4,7 @@
 //! and a trait [`QMetaTypable`](trait.QMetaTypable.html), that controls which types are able to be used in signals, slots or properties.
 
 use qvariantlist::QVariantList;
+use qvariant::QVariant;
 
 /// Provides an associated variant of enum for a type.
 ///
@@ -56,6 +57,12 @@ impl QMetaTypable for bool {
     }
 }
 
+impl QMetaTypable for QVariant {
+    fn metatype() -> QMetaType {
+        QMetaType::QVariant
+    }
+}
+
 /// Analogue of [`Qt::QMetaType::Type`](http://doc.qt.io/qt-5/qmetatype.html#Type-enum)
 ///
 /// `QMetaType` in Qt manages named types in the meta-object system.
@@ -68,4 +75,5 @@ pub enum QMetaType {
     QString = 10,
     Float = 38,
     QVariantList = 9,
+    QVariant = 41,
 }
