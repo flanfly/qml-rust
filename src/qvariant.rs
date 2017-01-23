@@ -143,6 +143,12 @@ impl From<QObject> for QVariant {
     }
 }
 
+impl<'a> From<&'a QVariant> for QVariant {
+    fn from(i: &'a QVariant) -> Self {
+        i.clone()
+    }
+}
+
 impl<'a> From<&'a [QVariant]> for QVariant {
     fn from(i: &'a [QVariant]) -> Self {
         unsafe {
