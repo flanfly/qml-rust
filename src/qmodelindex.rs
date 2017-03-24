@@ -8,6 +8,7 @@ extern "C" {
     // DOS_API void DOS_CALL dos_qmodelindex_delete (DosQModelIndex *vptr);
     fn dos_qmodelindex_row(vptr: DosQModelIndex) -> i32;
     fn dos_qmodelindex_column(vptr: DosQModelIndex) -> i32;
+    fn dos_qmodelindex_child(vptr: DosQModelIndex, row: i32, column: i32) -> DosQModelIndex;
 // DOS_API bool DOS_CALL dos_qmodelindex_isValid(const DosQModelIndex *vptr);
 // DOS_API DosQVariant *DOS_CALL dos_qmodelindex_data (const DosQModelIndex *vptr, int role);
 // DOS_API DosQModelIndex *DOS_CALL dos_qmodelindex_parent (const DosQModelIndex *vptr);
@@ -33,6 +34,10 @@ impl QModelIndex {
 
     pub fn column(&self) -> i32 {
         unsafe { dos_qmodelindex_column(self.0) }
+    }
+
+    pub fn child(&self, row: i32, column: i32) -> Self {
+        unsafe { QModelIndex(dos_qmodelindex_child(self.0,row,column)) }
     }
 }
 

@@ -114,6 +114,13 @@ extern "C" {
     fn dos_qabstractlistmodel_beginResetModel(vptr: DosQAbstractListModel);
     fn dos_qabstractlistmodel_endResetModel(vptr: DosQAbstractListModel);
     fn dos_qabstractlistmodel_endRemoveRows(vptr: DosQAbstractListModel);
+
+    fn dos_qabstractlistmodel_dataChanged(vptr: DosQAbstractListModel,
+                                             top_left: DosQModelIndex,
+                                             bottom_righ: DosQModelIndex,
+                                             roles: *mut i32,
+                                             rols_length: i32);
+
 }
 
 impl<'a> QListModel<'a> {
@@ -218,9 +225,16 @@ impl<'a> QListModel<'a> {
     /// Changes a line in underlying data
     pub fn change_line(&mut self, index: usize, qvars: Vec<QVariant>) {
         unsafe {
-            dos_qabstractlistmodel_beginResetModel(self.wrapped.load(Ordering::Relaxed));
+            let cols = qvars.len() as i32;
+
             self.model[index] = qvars;
-            dos_qabstractlistmodel_endResetModel(self.wrapped.load(Ordering::Relaxed));
+
+            let top_left = QModelIndex::new().child(index as i32,0);
+            let bottom_right = QModelIndex::new().child(index as i32,cols - 1);
+            dos_qabstractlistmodel_dataChanged(self.wrapped.load(Ordering::Relaxed),
+                                               get_model_ptr(&top_left),
+                                               get_model_ptr(&bottom_right),
+                                               null_mut(),0);
         }
     }
 
