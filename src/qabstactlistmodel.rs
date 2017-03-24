@@ -229,12 +229,13 @@ impl<'a> QListModel<'a> {
 
             self.model[index] = qvars;
 
+            let mut empty = [];
             let top_left = QModelIndex::new().child(index as i32,0);
             let bottom_right = QModelIndex::new().child(index as i32,cols - 1);
             dos_qabstractlistmodel_dataChanged(self.wrapped.load(Ordering::Relaxed),
                                                get_model_ptr(&top_left),
                                                get_model_ptr(&bottom_right),
-                                               null_mut(),0);
+                                               empty.as_mut_ptr(),0);
         }
     }
 
