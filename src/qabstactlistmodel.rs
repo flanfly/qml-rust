@@ -232,6 +232,7 @@ impl<'a> QListModel<'a> {
             let mut empty = [];
             let top_left = QModelIndex::new().child(index as i32,0);
             let bottom_right = QModelIndex::new().child(index as i32,cols - 1);
+            println!("qml-rust: dataChanged() topLeft={}/{}, bottomRight={}/{}",top_left.row(),top_left.column(),bottom_right.row(),bottom_right.column());
             dos_qabstractlistmodel_dataChanged(self.wrapped.load(Ordering::Relaxed),
                                                get_model_ptr(&top_left),
                                                get_model_ptr(&bottom_right),
