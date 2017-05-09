@@ -100,22 +100,22 @@ pub struct QListModel<'a> {
 }
 
 extern "C" {
-    fn dos_qabstractlistmodel_beginInsertRows(vptr: DosQAbstractListModel,
+    fn dos_qabstractitemmodel_beginInsertRows(vptr: DosQAbstractListModel,
                                               parent: DosQModelIndex,
                                               first: i32,
                                               last: i32);
-   fn dos_qabstractlistmodel_beginRemoveRows(vptr: DosQAbstractListModel,
+   fn dos_qabstractitemmodel_beginRemoveRows(vptr: DosQAbstractListModel,
                                              parent: DosQModelIndex,
                                              first: i32,
                                              last: i32);
 
-    fn dos_qabstractlistmodel_endInsertRows(vptr: DosQAbstractListModel);
+    fn dos_qabstractitemmodel_endInsertRows(vptr: DosQAbstractListModel);
 
-    fn dos_qabstractlistmodel_beginResetModel(vptr: DosQAbstractListModel);
-    fn dos_qabstractlistmodel_endResetModel(vptr: DosQAbstractListModel);
-    fn dos_qabstractlistmodel_endRemoveRows(vptr: DosQAbstractListModel);
+    fn dos_qabstractitemmodel_beginResetModel(vptr: DosQAbstractListModel);
+    fn dos_qabstractitemmodel_endResetModel(vptr: DosQAbstractListModel);
+    fn dos_qabstractitemmodel_endRemoveRows(vptr: DosQAbstractListModel);
 
-    fn dos_qabstractlistmodel_dataChanged(vptr: DosQAbstractListModel,
+    fn dos_qabstractitemmodel_dataChanged(vptr: DosQAbstractListModel,
                                              top_left: DosQModelIndex,
                                              bottom_righ: DosQModelIndex,
                                              roles: *mut i32,
@@ -173,12 +173,12 @@ impl<'a> QListModel<'a> {
     {
         unsafe {
             let index = QModelIndex::new();
-            dos_qabstractlistmodel_beginInsertRows(self.wrapped.load(Ordering::Relaxed),
+            dos_qabstractitemmodel_beginInsertRows(self.wrapped.load(Ordering::Relaxed),
                                                    get_model_ptr(&index),
                                                    self.model.len() as i32,
                                                    (self.model.len() ) as i32);
             self.model.push(qvars.collect());
-            dos_qabstractlistmodel_endInsertRows(self.wrapped.load(Ordering::Relaxed));
+            dos_qabstractitemmodel_endInsertRows(self.wrapped.load(Ordering::Relaxed));
         }
     }
 
@@ -190,12 +190,12 @@ impl<'a> QListModel<'a> {
     {
         unsafe {
             let parent = QModelIndex::new();
-            dos_qabstractlistmodel_beginInsertRows(self.wrapped.load(Ordering::Relaxed),
+            dos_qabstractitemmodel_beginInsertRows(self.wrapped.load(Ordering::Relaxed),
                                                    get_model_ptr(&parent),
                                                    index as i32,
                                                    index as i32);
             self.model.insert(index,qvars.collect());
-            dos_qabstractlistmodel_endInsertRows(self.wrapped.load(Ordering::Relaxed));
+            dos_qabstractitemmodel_endInsertRows(self.wrapped.load(Ordering::Relaxed));
         }
     }
 
@@ -204,21 +204,21 @@ impl<'a> QListModel<'a> {
     {
         unsafe {
             let modelindex = QModelIndex::new();
-            dos_qabstractlistmodel_beginRemoveRows(self.wrapped.load(Ordering::Relaxed),
+            dos_qabstractitemmodel_beginRemoveRows(self.wrapped.load(Ordering::Relaxed),
                                                    get_model_ptr(&modelindex),
                                                    index as i32,
                                                    index as i32);
             self.model.remove(index as usize);
-            dos_qabstractlistmodel_endRemoveRows(self.wrapped.load(Ordering::Relaxed));
+            dos_qabstractitemmodel_endRemoveRows(self.wrapped.load(Ordering::Relaxed));
         }
     }
 
     /// Sets a data for this QAbstractListModel
     pub fn set_data(&mut self, qvars: Vec<Vec<QVariant>>) {
         unsafe {
-            dos_qabstractlistmodel_beginResetModel(self.wrapped.load(Ordering::Relaxed));
+            dos_qabstractitemmodel_beginResetModel(self.wrapped.load(Ordering::Relaxed));
             self.model = qvars;
-            dos_qabstractlistmodel_endResetModel(self.wrapped.load(Ordering::Relaxed));
+            dos_qabstractitemmodel_endResetModel(self.wrapped.load(Ordering::Relaxed));
         }
     }
 
@@ -233,7 +233,7 @@ impl<'a> QListModel<'a> {
             let top_left = QModelIndex::new().child(index as i32,0);
             let bottom_right = QModelIndex::new().child(index as i32,cols - 1);
             println!("qml-rust: dataChanged() topLeft={}/{}, bottomRight={}/{}",top_left.row(),top_left.column(),bottom_right.row(),bottom_right.column());
-            dos_qabstractlistmodel_dataChanged(self.wrapped.load(Ordering::Relaxed),
+            dos_qabstractitemmodel_dataChanged(self.wrapped.load(Ordering::Relaxed),
                                                get_model_ptr(&top_left),
                                                get_model_ptr(&bottom_right),
                                                empty.as_mut_ptr(),0);
@@ -243,9 +243,9 @@ impl<'a> QListModel<'a> {
     /// Clear all the data from the model
     pub fn clear(&mut self) {
         unsafe {
-            dos_qabstractlistmodel_beginResetModel(self.wrapped.load(Ordering::Relaxed));
+            dos_qabstractitemmodel_beginResetModel(self.wrapped.load(Ordering::Relaxed));
             self.model.clear();
-            dos_qabstractlistmodel_endResetModel(self.wrapped.load(Ordering::Relaxed));
+            dos_qabstractitemmodel_endResetModel(self.wrapped.load(Ordering::Relaxed));
         }
     }
 
