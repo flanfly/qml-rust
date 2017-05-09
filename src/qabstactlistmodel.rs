@@ -8,8 +8,8 @@ use qinthasharray::*;
 
 extern "C" {
 
-    fn dos_qabstractlistmodel_qmetaobject() -> DosQMetaObject;
-    fn dos_qabstractlistmodel_create(callbackObject: *const libc::c_void,
+    fn dos_qabstractitemmodel_qmetaobject() -> DosQMetaObject;
+    fn dos_qabstractitemmodel_create(callbackObject: *const libc::c_void,
                                      metaObject: DosQMetaObject,
                                      dObjectCallback: DObjectCallback,
                                      rowCountCallback: RowCountCallback,
@@ -137,9 +137,9 @@ impl<'a> QListModel<'a> {
             // Probably need an explanation on why do I need a box
             let mut boxer = Box::new(result);
 
-            let dqmo = dos_qabstractlistmodel_qmetaobject();
+            let dqmo = dos_qabstractitemmodel_qmetaobject();
             let dqalm =
-                dos_qabstractlistmodel_create(&*boxer as *const QListModel as *const libc::c_void,
+                dos_qabstractitemmodel_create(&*boxer as *const QListModel as *const libc::c_void,
                                               dqmo,
                                               RustObjectCallback, // no need
                                               RustRowCountCallback,
